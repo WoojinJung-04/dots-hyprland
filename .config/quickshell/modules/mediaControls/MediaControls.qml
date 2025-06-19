@@ -38,7 +38,9 @@ Scope {
             // playerctld just copies other buses and we don't need duplicates
             !player.dbusName?.startsWith('org.mpris.MediaPlayer2.playerctld') &&
             // Non-instance mpd bus
-            !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd'))
+						 !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd')) &&
+						 // 
+						 !(player.trackTitle.includes("Untitled") && player.length <= 2)
         );
     }
     function filterDuplicatePlayers(players) {
@@ -55,10 +57,8 @@ Scope {
                 let p2 = players[j];
                 if (p1.trackTitle && p2.trackTitle &&
                     (p1.trackTitle.includes(p2.trackTitle) 
-                        || p2.trackTitle.includes(p1.trackTitle))
-                        || (p1.position - p2.position <= 2 && p1.length - p2.length <= 2)) {
-                    group.push(j);
-                }else if (p1.position - p2.position <= 2 && ( p2.includes("Browser") || p2.includes("Music") )){
+	                     || p2.trackTitle.includes(p1.trackTitle))
+                        || (p1.position - p2.position <= 2 && p1.length - p2.length <= 2) && (p2.trackTitle.includes("Browser") || p2.trackTitle.includes("Music"))){
                     group.push(j);
                 }
             }
